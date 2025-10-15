@@ -10,11 +10,11 @@ import shutil
 load_dotenv()
 
 # ---- PLACEHOLDERS ----
-MODEL_ID = "google/gemma-3-4b-it"  # e.g., "google/medgemma-4b-it"
+MODEL_ID = "<your-hf-model-id>"  # e.g., "google/gemma-3b-270m"
 HF_TOKEN = os.getenv('HF_TOKEN')  # Loaded from .env file
 if not HF_TOKEN:
     raise ValueError("HF_TOKEN not found in .env file. Please create a .env file with HF_TOKEN=your_token")
-QUANTIZED_REPO = "huseyincavus/gemma-3-4b-it-4-bit-mlx"  # e.g., "username/model-4-bit-mlx"
+QUANTIZED_REPO = "<your-username>/<your-quantized-repo>"  # e.g., "username/gemma-3b-270m-4bit-mlx"
 # ----------------------
 
 # Login to Hugging Face

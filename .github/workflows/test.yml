@@ -1,0 +1,40 @@
+name: Test MLX Quant Script
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Set up Hugging Face token
+      run: echo "HF_TOKEN=${{ secrets.HF_TOKEN }}" > .env
+    
+    - name: Run quantization script with gemma-3-270m
+      env:
+        HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        MODEL_ID: google/gemma-3-270m
+        QUANTIZED_REPO: huseyincavus/gemma-3-270m-4bit-mlx
+      run: |
+        sed -i.bak 's|MODEL_ID = ".*"|MODEL_ID = os.environ.get("MODEL_ID", "<your-hf-model-id>")|' mlx-quant.py
+        sed -i.bak 's|QUANTIZED_REPO = ".*"|QUANTIZED_REPO = os.environ.get("QUANTIZED_REPO", "<your-username>/<your-quantized-repo>")|' mlx-quant.py
+        python mlx-quant.py
+    
+    - name: Validate script syntax
+      run: python -m py_compile mlx-quant.py
